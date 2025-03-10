@@ -1,0 +1,16 @@
+<%- include('partials/header', { title: post.title }) %>
+<div class="container mt-5">
+  <h1><%= post.title %></h1>
+
+
+  <p>By <%= post.author.username %> on <%= post.createdAt.toDateString() %></p>
+  <div class="markdown-content"><%- marked.parse(post.content) %></div>
+  <% if (user && user._id.equals(post.author._id)
+  ) { %>
+    <a href="/posts/<%= post._id %>/edit" class="btn btn-warning">Edit</a>
+    <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" class="d-inline">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  <% } %>
+</div>
+<%- include('partials/footer') %>
