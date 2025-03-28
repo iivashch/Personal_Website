@@ -1,0 +1,17 @@
+<%- include('partials/header', { title: 'Home' }) %>
+<div class="container mt-5">
+  <h1>Welcome to Express Blog</h1>
+  <% if (posts && posts.length > 0) { %>
+    <div class="list-group">
+      <% posts.forEach(post => { %>
+        <a href="/posts/<%= post._id %>" class="list-group-item list-group-item-action">
+          <h5><%= post.title %></h5>
+          <small>By <%= post.author.username %> on <%= post.createdAt.toDateString() %></small>
+        </a>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No posts found.</p>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,25 @@
+<%- include('partials/header', { title: 'Create Post' }) %>
+<div class="container mt-5">
+  <h1>Create a New Post</h1>
+  <form action="/posts" method="POST">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">Content</label>
+      <textarea id="content" name="content"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Post</button>
+  </form>
+</div>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+<script>
+  const simplemde = new SimpleMDE({ element: document.getElementById('content'),
+    previewRender: function(plainText) {
+      return marked(plainText);
+    }
+   });
+</script>
+<%- include('partials/footer') %>
