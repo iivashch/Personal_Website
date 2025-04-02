@@ -55,8 +55,6 @@ app.use('/posts', require('./routes/posts'));
 app.use('/admin', require('./routes/admin'));
 
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// 👇 Required for serverless
+const serverless = require('serverless-http');
+module.exports.handler = serverless(app);

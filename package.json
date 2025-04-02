@@ -21,7 +21,11 @@
     "jsonwebtoken": "^9.0.2",
     "marked": "^15.0.7",
     "method-override": "^3.0.0",
+    "mongodb": "4.0",
     "mongoose": "^8.12.1",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-http": "^3.2.0",
+    "serverless-offline": "^14.4.0",
     "simplemde": "^1.11.2"
   },
   "devDependencies": {
