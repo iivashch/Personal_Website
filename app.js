@@ -1,3 +1,9 @@
+/*
+const dotenv = require('dotenv');
+dotenv.config();
+const SECRET_KEY = process.env.SECRET_KEY;
+console.log('Secret Key:', SECRET_KEY); // Debug log
+*/
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -39,7 +45,7 @@ app.use(async (req, res, next) => {
     }
   
     try {
-      const decoded = jwt.verify(token, 'secretkey');
+      const decoded = jwt.verify(token, "scretkey");
       const user = await User.findById(decoded.userId);
       if (!user) {
           console.log('User not found:'); // Debug log
@@ -105,7 +111,7 @@ app.post('/login', async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(400).send('Invalid credentials');
   }
-  const token = jwt.sign({ userId: user._id }, 'secretkey');
+  const token = jwt.sign({ userId: user._id }, "secretkey", { expiresIn: '1h' });
   res.cookie('token', token, { httpOnly: true });
 
     console.log('Authenticated User:', user.username);
