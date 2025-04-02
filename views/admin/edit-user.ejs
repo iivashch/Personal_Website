@@ -1,0 +1,27 @@
+<%- include('../partials/header', { title: 'Edit User '}) %>
+
+<div class="container mt-5">
+  <h1>Edit User</h1>
+
+  <form action="/admin/users/<%= user._id %>/edit" method="POST" class="mt-4">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" name="username" id="username" class="form-control" value="<%= user.username %>" required>
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" name="isAdmin" id="isAdmin" <%= user.isAdmin ? 'checked' : '' %>>
+      <label class="form-check-label" for="isAdmin">Is Admin</label>
+    </div>
+
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" name="isApproved" id="isApproved" <%= user.isApproved ? 'checked' : '' %>>
+      <label class="form-check-label" for="isApproved">Is Approved</label>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a href="/admin/users" class="btn btn-secondary ms-2">Cancel</a>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

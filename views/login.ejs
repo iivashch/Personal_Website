@@ -1,7 +1,15 @@
 <%- include('partials/header', { title: 'Login' }) %>
+
 <div class="container mt-5">
   <h1>Login</h1>
-  <form action="/login" method="POST">
+
+  <% if (error === 'invalid') { %>
+    <p class="text-danger">Invalid username or password.</p>
+  <% } else if (error === 'approval') { %>
+    <p class="text-warning">Your account is pending admin approval.</p>
+  <% } %>
+
+  <form action="/auth/login" method="POST">
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
       <input type="text" class="form-control" id="username" name="username" required>
@@ -13,4 +21,5 @@
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
 </div>
+
 <%- include('partials/footer') %>

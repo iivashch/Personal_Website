@@ -1,0 +1,43 @@
+<%- include('../partials/header', { title: 'Manage Posts' }) %>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Post Management</h1>
+
+  <% if (posts.length === 0) { %>
+    <div class="alert alert-info">No posts have been created yet.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Date</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% posts.forEach(post => { %>
+            <tr>
+              <td><%= post.title.length > 60 ? post.title.substring(0, 60) + '...' : post.title %></td>
+              <td><%= post.author ? post.author.username : 'Unknown' %></td>
+              <td><%= post.createdAt ? post.createdAt.toLocaleDateString() : '-' %></td>
+              <td class="text-end">
+                <a href="/admin/posts/<%= post._id %>/edit" class="btn btn-sm btn-warning me-2">
+                  <i class="bi bi-pencil-square"></i> Edit
+                </a>
+                <form action="/admin/posts/<%= post._id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Delete this post?');">
+                  <button class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
