@@ -13,10 +13,8 @@ dotenv.config();
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://mongo:27017/myapp', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGO_URI);
+
 
 
 
@@ -48,6 +46,7 @@ app.set('view engine', 'ejs');
 const { authenticateUser } = require('./middleware/authenticate');
 app.use(authenticateUser);
 
+
 // Routes
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
@@ -58,3 +57,9 @@ app.use('/admin', require('./routes/admin'));
 // 👇 Required for serverless
 const serverless = require('serverless-http');
 module.exports.handler = serverless(app);
+
+/*
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 3000}`);
+});
+*/

@@ -1,0 +1,61 @@
+service: express-blog-app
+
+frameworkVersion: '4.10.1'
+
+provider:
+  stage: dev #change this to prod for production
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    MONGO_URI: ${env:MONGO_URI}
+    SECRET_KEY: ${env:SECRET_KEY}
+    ADMIN_USERNAME: ${env:ADMIN_USERNAME}
+    ADMIN_PASSWORD: ${env:ADMIN_PASSWORD}
+  timeout: 29  # optional, allows longer processing
+
+functions:
+  app:
+    handler: app.handler
+    events:
+      - http:
+          path: /
+          method: any
+      - http:
+          path: /{proxy+}
+          method: any
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: iivashch.click
+    basePath: ''               # removes `/dev`
+    stage: dev
+    createRoute53Record: true
+    endpointType: regional
+  dotenv:
+    basePath: ./
+  
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - 'node_modules/express/**'
+    - 'node_modules/**'
+    - 'app.js'
+    - 'routes/**'
+    - 'models/**'
+    - 'middleware/**'
+    - 'views/**'
+    - 'public/**'
+  exclude:
+    - .git/**
+    - .gitignore
+    - README.md
+    - .vscode/
+    - .env
+    - .DS_Store

@@ -1,13 +1,8 @@
-.markdown-content {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 100%;
-  }
-  
+
   /* Sticky footer layout */
 html, body {
   height: 100%;
+  width: 100%;
 }
 
 body {
@@ -18,3 +13,16 @@ body {
 main {
   flex: 1;
 }
+
+
+.markdown-content {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 100%;
+}
+
+.container {
+  margin-top: 10vh;   /* adds space so popup fits above */
+}
+

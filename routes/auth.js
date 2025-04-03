@@ -12,7 +12,7 @@ router.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const user = new User({ username, password });
   await user.save();
-  res.redirect('/auth/login');
+  res.redirect('/?registered=pending');
 });
 
 router.get('/login', (req, res) => {

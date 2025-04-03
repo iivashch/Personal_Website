@@ -14,4 +14,36 @@
     <p>No posts found.</p>
   <% } %>
 </div>
+
+<% if (query && query.registered === 'pending') { %>
+  <div class="modal fade show" id="pendingModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title">Account Created</h5>
+          <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Your account has been created and is <strong>pending administrator approval</strong>.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop fade show"></div>
+
+  <script>
+    function closeModal() {
+      document.getElementById('pendingModal').style.display = 'none';
+      document.querySelector('.modal-backdrop').remove();
+      window.history.replaceState(null, null, window.location.pathname); // remove ?registered param
+    }
+  </script>
+<% } %>
+
+
+
 <%- include('partials/footer') %>
