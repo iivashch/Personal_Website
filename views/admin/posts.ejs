@@ -23,10 +23,10 @@
               <td><%= post.author ? post.author.username : 'Unknown' %></td>
               <td><%= post.createdAt ? post.createdAt.toLocaleDateString() : '-' %></td>
               <td class="text-end">
-                <a href="<%= baseUrl %>/admin/posts/<%= post._id %>/edit" class="btn btn-sm btn-warning me-2">
+                <a href="/admin/posts/<%= post._id %>/edit" class="btn btn-sm btn-warning me-2">
                   <i class="bi bi-pencil-square"></i> Edit
                 </a>
-                <form action="<%= baseUrl %>/admin/posts/<%= post._id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Delete this post?');">
+                <form action="/admin/posts/<%= post._id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Delete this post?');">
                   <button class="btn btn-sm btn-danger">
                     <i class="bi bi-trash"></i> Delete
                   </button>

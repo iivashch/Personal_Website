@@ -8,6 +8,15 @@ const app = express();
 
 const User = require('./models/User');
 
+
+// Dashboard models
+const dashboardRoutes = require('./routes/dashboard');
+
+
+// Game models
+const snakeRoute = require('./routes/snake');
+const guessRoutes = require('./routes/guess');
+
 // Load environment variables
 dotenv.config();
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -53,13 +62,27 @@ app.use('/auth', require('./routes/auth'));
 app.use('/posts', require('./routes/posts'));
 app.use('/admin', require('./routes/admin'));
 
+// Game routes
+app.use('/snake', snakeRoute);
+app.use('/guess', guessRoutes);
+app.use(express.json()); // <--- REQUIRED to parse JSON POST bodies
+app.use(express.urlencoded({ extended: true }));
 
-// 👇 Required for serverless
-const serverless = require('serverless-http');
-module.exports.handler = serverless(app);
+// Dashboard routes
+app.use('/dashboard', dashboardRoutes);
 
-/*
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server is running on port ${process.env.PORT || 3000}`);
-});
-*/
+var deployment = true;
+
+if (deployment) {
+  // 👇 Required for serverless
+  const serverless = require('serverless-http');
+  module.exports.handler = serverless(app);
+
+} else {
+
+
+  app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running on port ${process.env.PORT || 3000}`);
+  });
+
+}

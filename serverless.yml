@@ -24,6 +24,15 @@ functions:
       - http:
           path: /{proxy+}
           method: any
+  runPython:
+    handler: python/handler.run
+    runtime: python3.9
+    memorySize: 128
+    timeout: 10
+    events:
+      - http:
+          path: run-python
+          method: post
 
 plugins:
   - serverless-offline

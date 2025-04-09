@@ -1,0 +1,48 @@
+<!-- views/guess.ejs -->
+<%- include('partials/header', { title: 'Guess the Number Game', user }) %>
+<style>
+  .game-container {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+<div class="container text-center game-container">
+  <h1 class="mb-4">🔢 Two-Player Guess the Number</h1>
+  <form id="gameForm">
+    <div class="mb-3">
+      <label for="playerNumber" class="form-label">Choose a number (0–10):</label>
+      <input type="number" class="form-control text-center" id="playerNumber" name="playerNumber" min="0" max="10" required>
+    </div>
+    <div class="mb-3">
+      <label for="guessNumber" class="form-label">Guess your opponent's number:</label>
+      <input type="number" class="form-control text-center" id="guessNumber" name="guessNumber" min="0" max="10" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <div class="mt-4" id="resultBox"></div>
+</div>
+
+<script>
+  const form = document.getElementById('gameForm');
+  const resultBox = document.getElementById('resultBox');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const chosen = parseInt(document.getElementById('playerNumber').value, 10);
+    const guess = parseInt(document.getElementById('guessNumber').value, 10);
+
+    const res = await fetch('/guess', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chosen, guess })
+    });
+
+    const data = await res.json();
+    resultBox.innerHTML = `<h4 class="text-${data.success ? 'success' : 'danger'}">${data.message}</h4>`;
+  });
+</script>
+<%- include('partials/footer') %>

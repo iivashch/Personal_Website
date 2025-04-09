@@ -1,0 +1,159 @@
+<%- include('partials/header', { title: 'Snake Game'}) %>
+<style>
+  html, body { height: 100%; margin: 0; }
+  canvas {
+    background-color: #222;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    width: 100%; max-width: 400px; height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .game-wrapper {
+    min-height: 90vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 0 1rem;
+  }
+</style>
+
+<div class="container-fluid text-center game-wrapper">
+  <h1 class="mb-4">🐍 Classic Snake Game</h1>
+
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <button id="restartButton" class="btn btn-outline-primary mt-3">Restart Game</button>
+  <p class="mt-3">Use arrow keys or swipe to move the snake.</p>
+
+  <% if (user) { %>
+    <p>Your best score: <strong id="bestScore"><%= user.snakeScore || 0 %></strong></p>
+    <form id="scoreForm" action="/snake/score" method="POST" style="display:none;">
+      <input type="hidden" name="score" id="scoreInput">
+    </form>
+    <div id="isLoggedIn" data-loggedin="true"></div>
+  <% } else { %>
+    <p><em>Log in to track your score!</em></p>
+    <div id="isLoggedIn" data-loggedin="false"></div>
+  <% } %>
+<!--- Uncomment this section if you want to display the leaderboard
+  <% if (leaderboard && leaderboard.length) { %>
+    <div class="mt-5 w-100" style="max-width: 400px;">
+      <h4>🏆 Leaderboard</h4>
+      <table class="table table-sm table-bordered">
+        <thead>
+          <tr><th>Rank</th><th>User</th><th>Score</th></tr>
+        </thead>
+        <tbody>
+          <% leaderboard.forEach((u, i) => { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= u.username %></td>
+              <td><%= u.snakeScore %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+--->
+</div>
+
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const box = 20;
+  let score, food, snake, direction, game;
+
+  function initGame() {
+    score = 0;
+    direction = undefined;
+    food = {
+      x: Math.floor(Math.random() * (canvas.width / box)) * box,
+      y: Math.floor(Math.random() * (canvas.height / box)) * box
+    };
+    snake = [{ x: 9 * box, y: 10 * box }];
+    if (game) clearInterval(game);
+    game = setInterval(draw, 150);
+  }
+
+  document.getElementById('restartButton').addEventListener('click', initGame);
+
+  document.addEventListener('keydown', e => {
+    const k = e.key;
+    if (k === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+    else if (k === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+    else if (k === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+    else if (k === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+    e.preventDefault();
+  });
+
+  let startX = null, startY = null;
+
+  canvas.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  });
+
+  canvas.addEventListener('touchmove', e => {
+    if (!startX || !startY) return;
+    const diffX = e.touches[0].clientX - startX;
+    const diffY = e.touches[0].clientY - startY;
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      direction = diffX > 0 && direction !== 'LEFT' ? 'RIGHT' : diffX < 0 && direction !== 'RIGHT' ? 'LEFT' : direction;
+    } else {
+      direction = diffY > 0 && direction !== 'UP' ? 'DOWN' : diffY < 0 && direction !== 'DOWN' ? 'UP' : direction;
+    }
+    startX = startY = null;
+  });
+
+  function draw() {
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    snake.forEach((s, i) => {
+      ctx.fillStyle = i === 0 ? 'green' : 'lime';
+      ctx.fillRect(s.x, s.y, box, box);
+    });
+
+    ctx.fillStyle = 'red';
+    ctx.fillRect(food.x, food.y, box, box);
+
+    let headX = snake[0].x, headY = snake[0].y;
+    if (direction === 'LEFT') headX -= box;
+    if (direction === 'UP') headY -= box;
+    if (direction === 'RIGHT') headX += box;
+    if (direction === 'DOWN') headY += box;
+
+    if (headX === food.x && headY === food.y) {
+      score++;
+      food = {
+        x: Math.floor(Math.random() * (canvas.width / box)) * box,
+        y: Math.floor(Math.random() * (canvas.height / box)) * box
+      };
+    } else {
+      snake.pop();
+    }
+
+    const newHead = { x: headX, y: headY };
+    if (
+      headX < 0 || headY < 0 ||
+      headX >= canvas.width || headY >= canvas.height ||
+      snake.some(seg => seg.x === headX && seg.y === headY)
+    ) {
+      clearInterval(game);
+      alert('Game Over! Score: ' + score);
+
+      const isLoggedIn = document.getElementById('isLoggedIn').dataset.loggedin === 'true';
+      if (isLoggedIn) {
+        const form = document.getElementById('scoreForm');
+        const input = document.getElementById('scoreInput');
+        input.value = score;
+        form.submit(); // traditional form POST
+      }
+    }
+
+    snake.unshift(newHead);
+  }
+
+  initGame();
+</script>
+<%- include('partials/footer') %>

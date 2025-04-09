@@ -4,8 +4,11 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  email: { type: String, default: "no_email_provided@noemail.com" , unique: true },
   isAdmin: { type: Boolean, default: false },
-  isApproved: { type: Boolean, default: false } // for registration approval
+  isApproved: { type: Boolean, default: false }, // for registration approval
+  createdAt: { type: Date, default: Date.now },
+  snakeScore: { type: Number, default: 0 }
 });
 
 // Auto-hash password
