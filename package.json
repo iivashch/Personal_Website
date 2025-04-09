@@ -23,13 +23,14 @@
     "method-override": "^3.0.0",
     "mongodb": "4.0",
     "mongoose": "^8.12.1",
+    "simplemde": "^1.11.2",
+    "nodemon": "^3.1.9",
+    "serverless-domain-manager": "^8.0.0",
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-http": "^3.2.0",
-    "serverless-offline": "^14.4.0",
-    "simplemde": "^1.11.2"
+    "serverless-offline": "^14.4.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
-    "serverless-domain-manager": "^8.0.0"
+    
   }
 }

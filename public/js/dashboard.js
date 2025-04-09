@@ -5,21 +5,21 @@ async function loadDashboard() {
       const res = await fetch('/dashboard/data');
       const data = await res.json();
   
-      // Headline data
+      // Headline indicators
       function renderHeadlineIndicators(data) {
         const list = document.getElementById('headline-list');
-        list.innerHTML = ''; // Clear old content if needed
-      
+        list.innerHTML = '';
+  
         const formatValue = (v, prefix = '', suffix = '') =>
           v !== undefined && v !== null ? `${prefix}${v}${suffix}` : 'N/A';
-      
+  
         const sections = [
           { label: 'stocks', prefix: '', suffix: '', pretty: { sp500: 'S&P 500', N100: 'NASDAQ 100', SSE: 'SSE Composite' } },
           { label: 'currencies', prefix: '', suffix: '', pretty: { dxy: 'Dollar Index (DXY)', btc: 'Bitcoin (BTC)' } },
           { label: 'precious_metals', prefix: '', suffix: '', pretty: { gold: 'Gold Price' } },
           { label: 'commodities', prefix: '$', suffix: '', pretty: { oil: 'Crude Oil Price' } }
         ];
-      
+  
         sections.forEach(section => {
           const values = data[section.label];
           if (values) {
@@ -33,7 +33,7 @@ async function loadDashboard() {
           }
         });
       }
-      
+  
       if (data.updated_at) {
         document.getElementById('last-updated').textContent = `Last updated: ${new Date(data.updated_at).toLocaleString()}`;
       }
@@ -54,14 +54,18 @@ async function loadDashboard() {
         link.textContent = metric.toUpperCase();
         sidebarContainer.appendChild(link);
   
-        // Section container
+        // Section
         const section = document.createElement('section');
         section.classList.add('mb-5');
         section.id = sectionId;
+  
         section.innerHTML = `
           <h4 class="text-capitalize">${metric.toUpperCase()}</h4>
           <canvas id="chart-${metric}" height="150"></canvas>
-          <button class="btn btn-outline-secondary btn-sm mt-2" onclick="document.getElementById('${metric}-report').style.display='block'">
+          <button 
+            class="btn btn-outline-secondary btn-sm mt-2"
+            onclick="toggleReport('${metric}', this)"
+          >
             Show Full Report
           </button>
           <div id="${metric}-report" class="full-report-container" style="display: none;"></div>
@@ -72,8 +76,9 @@ async function loadDashboard() {
         renderChart(`chart-${metric}`, data[metric]);
         renderFullReport(metric, data[metric].full_report);
       });
-    renderHeadlineIndicators(data);
-
+  
+      renderHeadlineIndicators(data);
+  
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
     }
@@ -121,6 +126,16 @@ async function loadDashboard() {
   
     table.appendChild(tbody);
     container.appendChild(table);
+  }
+  
+  // 🔁 Toggle report visibility and button label
+  function toggleReport(metric, btn) {
+    const report = document.getElementById(`${metric}-report`);
+    if (!report) return;
+  
+    const isHidden = report.style.display === 'none' || report.style.display === '';
+    report.style.display = isHidden ? 'block' : 'none';
+    btn.textContent = isHidden ? 'Hide Full Report' : 'Show Full Report';
   }
   
   window.addEventListener('DOMContentLoaded', loadDashboard);
