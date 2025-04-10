@@ -1,32 +1,48 @@
-// routes/dashboard.js
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-const { exec } = require('child_process');
+const axios = require('axios');
+const DashboardSnapshot = require('../models/DashboardSnapshot');
+const User = require('../models/User');
 
-router.get('/', (req, res) => {
-  const scriptPath = path.join(__dirname, '../py/dashboard_data_fetcher.py');
+const GITHUB_API_URL = 'https://iivashch.github.io/daily-json-api/data.json';
 
-  exec(`python3 "${scriptPath}"`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Python script error: ${error.message}`);
-      return res.status(500).send('Failed to fetch dashboard data.');
-    }
-    if (stderr) console.warn(`Python stderr: ${stderr}`);
-    console.log(`Python stdout: ${stdout}`);
+User.findById(req.user._id).select('username isAdmin');
 
-    res.render('dashboard', { user: req.user });
-  });
+// Helper to check if snapshot is older than 24 hours
+const isStale = (date) => {
+  if (!date) return true;
+  const oneDay = 24 * 60 * 60 * 1000;
+  return Date.now() - new Date(date).getTime() > oneDay;
+};
+
+// 🔸 Render dashboard page
+router.get('/dashboard', (req, res) => {
+  res.render('dashboard', { user: req.user });
 });
 
-router.get('/data', (req, res) => {
-  const file = path.join(__dirname, '../data/dashboard.json');
-  if (fs.existsSync(file)) {
-    const json = fs.readFileSync(file);
-    res.json(JSON.parse(json));
-  } else {
-    res.status(500).json({ error: 'Data not available' });
+// 🔸 Fetch dashboard data (uses DB if fresh, otherwise updates from GitHub Pages)
+router.get('/dashboard/data', async (req, res) => {
+  try {
+    let snapshot = await DashboardSnapshot.findOne().sort({ updated_at: -1 });
+
+    if (!snapshot || isStale(snapshot.updated_at)) {
+      console.log('🌐 Fetching fresh data from GitHub Pages...');
+      const response = await axios.get(GITHUB_API_URL);
+      const freshData = response.data;
+
+      // Update database with fresh data
+      snapshot = new DashboardSnapshot(freshData);
+      await snapshot.save();
+    }
+
+    const data = snapshot.toObject();
+    delete data._id;
+    delete data.__v;
+
+    res.json(data);
+  } catch (err) {
+    console.error('❌ Error fetching dashboard data:', err.message);
+    res.status(500).json({ error: 'Dashboard data fetch error' });
   }
 });
 

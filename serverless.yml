@@ -7,16 +7,17 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
+  timeout: 29
   environment:
     MONGO_URI: ${env:MONGO_URI}
     SECRET_KEY: ${env:SECRET_KEY}
     ADMIN_USERNAME: ${env:ADMIN_USERNAME}
     ADMIN_PASSWORD: ${env:ADMIN_PASSWORD}
-  timeout: 29  # optional, allows longer processing
+    FRED_API: ${env:FRED_API}
 
 functions:
   app:
-    handler: app.handler
+    handler: lambda.handler
     events:
       - http:
           path: /
@@ -24,31 +25,36 @@ functions:
       - http:
           path: /{proxy+}
           method: any
-  runPython:
-    handler: py/handler.run
-    runtime: python3.9
-    memorySize: 128
-    timeout: 10
-    events:
-      - http:
-          path: run-python
-          method: post
+
+  fetchDashboard:
+    name: express-blog-app-dev-fetchDashboard
+    handler: py_fetcher/handler.run
+    runtime: python3.11
+    timeout: 30
+    memorySize: 512
+    environment:
+      MONGO_URI: ${env:MONGO_URI}
+      SECRET_KEY: ${env:SECRET_KEY}
+      ADMIN_USERNAME: ${env:ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${env:ADMIN_PASSWORD}
+      FRED_API: ${env:FRED_API}
 
 plugins:
-  - serverless-offline
   - serverless-dotenv-plugin
   - serverless-domain-manager
 
 custom:
   customDomain:
     domainName: iivashch.click
-    basePath: ''               # removes `/dev`
+    basePath: ''
     stage: dev
     createRoute53Record: true
     endpointType: regional
   dotenv:
     basePath: ./
-  
+  pythonRequirements:
+    pythonBin: python3
+
 
 package:
   patterns:
@@ -56,6 +62,7 @@ package:
     - 'node_modules/express/**'
     - 'node_modules/**'
     - 'app.js'
+    - 'lambda.js'
     - 'routes/**'
     - 'models/**'
     - 'middleware/**'

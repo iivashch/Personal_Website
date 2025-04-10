@@ -11,7 +11,8 @@ const User = require('./models/User');
 
 // Dashboard models
 const dashboardRoutes = require('./routes/dashboard');
-
+// Dashboard routes
+app.use('/', dashboardRoutes);
 
 // Game models
 const snakeRoute = require('./routes/snake');
@@ -68,21 +69,6 @@ app.use('/guess', guessRoutes);
 app.use(express.json()); // <--- REQUIRED to parse JSON POST bodies
 app.use(express.urlencoded({ extended: true }));
 
-// Dashboard routes
-app.use('/dashboard', dashboardRoutes);
-
-var deployment = true;
-
-if (deployment) {
-  // 👇 Required for serverless
-  const serverless = require('serverless-http');
-  module.exports.handler = serverless(app);
-
-} else {
 
 
-  app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port ${process.env.PORT || 3000}`);
-  });
-
-}
+module.exports = app;

@@ -2,7 +2,7 @@
 
 async function loadDashboard() {
     try {
-      const res = await fetch('/dashboard/data');
+      const res = await fetch('https://iivashch.github.io/daily-json-api/data.json');
       const data = await res.json();
   
       // Headline indicators
@@ -139,4 +139,29 @@ async function loadDashboard() {
   }
   
   window.addEventListener('DOMContentLoaded', loadDashboard);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('refreshDashboard');
+    const status = document.getElementById('refreshStatus');
+  
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        status.textContent = 'Refreshing...';
+        try {
+          const res = await fetch('/dashboard/refresh', { method: 'POST' });
+          const result = await res.json();
+          if (result.success) {
+            status.textContent = '✅ Refreshed!';
+            await loadDashboard(); // reload charts
+          } else {
+            status.textContent = '⚠️ Refresh failed';
+          }
+        } catch (err) {
+          console.error('Refresh error:', err);
+          status.textContent = '❌ Error refreshing';
+        }
+      });
+    }
+  });
+  
   

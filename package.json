@@ -1,7 +1,7 @@
 {
   "name": "express-docker-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Written with Express, EJS, Javascript, Docker, and deployed using AWS.",
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
@@ -12,6 +12,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "aws-serverless-express": "^3.4.0",
+    "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
@@ -23,14 +26,19 @@
     "method-override": "^3.0.0",
     "mongodb": "4.0",
     "mongoose": "^8.12.1",
-    "simplemde": "^1.11.2",
     "nodemon": "^3.1.9",
     "serverless-domain-manager": "^8.0.0",
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-http": "^3.2.0",
-    "serverless-offline": "^14.4.0"
+    "serverless-python-requirements": "^6.1.2",
+    "simplemde": "^1.11.2"
   },
-  "devDependencies": {
-    
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iivashch/Personal_Website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iivashch/Personal_Website/issues"
+  },
+  "homepage": "https://github.com/iivashch/Personal_Website#readme"
 }
