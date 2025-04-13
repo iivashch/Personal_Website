@@ -50,7 +50,7 @@ functions:
     handler: binaryServe.handler   # ✅ make sure this points to binaryImage.js
     events:
       - http:
-          path: files/{proxy+}
+          path: static/{proxy+}
           method: get
 
 plugins:

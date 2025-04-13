@@ -11,7 +11,7 @@ const mimeTypes = {
 
 module.exports.handler = async (event) => {
   try {
-    const filename = event.queryStringParameters?.file;
+    const filename = event.pathParameters.proxy;
     if (!filename) {
       return { statusCode: 400, body: 'Missing file parameter' };
     }

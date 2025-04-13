@@ -1,59 +1,52 @@
+// app.js
 const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
-// 🗂️ Routes
-const filesRoute = require('./routes/files');
-
+dotenv.config();
 
 const app = express();
 
-
-
-// 🌱 Load environment variables
-dotenv.config();
-
 // 🔗 Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI);
-
-// 🧩 Models
-const User = require('./models/User');
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log('✅ MongoDB connected'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
 
 // 🔧 View engine
 app.set('view engine', 'ejs');
 
-// 📂 Serve static assets from public folder
-app.use(express.static('public'));
+// 📂 Serve static assets from /public
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 🧼 Core middleware
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 
-// 🔐 Auth middleware
+// 🔐 Authentication middleware
 const { authenticateUser } = require('./middleware/authenticate');
 app.use(authenticateUser);
 
-
-
-// 📦 Body parsers (AFTER upload routes!)
+// 📦 Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 🌍 Core application routes
+// 🌍 Route handlers
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/posts', require('./routes/posts'));
 app.use('/admin', require('./routes/admin'));
-app.use('/', require('./routes/dashboard'));
-app.use('/files', requere(filesRoute));
-
-// 🎮 Mini-apps and games
+app.use('/dashboard', require('./routes/dashboard'));
+app.use('/files', require('./routes/files')); // includes upload/download/preview/delete
 app.use('/snake', require('./routes/snake'));
 app.use('/guess', require('./routes/guess'));
+app.use('/', require('./routes/health'));
 
-// 👑 Create admin if missing
+
+// 👑 Admin bootstrap
+const User = require('./models/User');
 mongoose.connection.once('open', async () => {
   try {
     const adminExists = await User.findOne({ username: process.env.ADMIN_USERNAME });
@@ -62,7 +55,7 @@ mongoose.connection.once('open', async () => {
         username: process.env.ADMIN_USERNAME,
         password: process.env.ADMIN_PASSWORD,
         isAdmin: true,
-        isApproved: true
+        isApproved: true,
       });
       await admin.save();
       console.log('✔ Admin user created');
@@ -70,8 +63,14 @@ mongoose.connection.once('open', async () => {
       console.log('✔ Admin user already exists');
     }
   } catch (err) {
-    console.error('❌ Error checking/creating admin user:', err);
+    console.error('❌ Error creating admin:', err);
   }
 });
+
+// ✅ Start server locally only if not in Lambda
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`🚀 App running at http://localhost:${PORT}`));
+}
 
 module.exports = app;

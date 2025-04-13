@@ -14,12 +14,12 @@ const isStale = (date) => {
 };
 
 // 🔸 Render dashboard page
-router.get('/dashboard', (req, res) => {
+router.get('/', (req, res) => {
   res.render('dashboard', { user: req.user });
 });
 
 // 🔸 Fetch dashboard data (uses DB if fresh, otherwise updates from GitHub Pages)
-router.get('/dashboard/data', async (req, res) => {
+router.get('/data', async (req, res) => {
   try {
     let snapshot = await DashboardSnapshot.findOne().sort({ updated_at: -1 });
 
@@ -45,7 +45,7 @@ router.get('/dashboard/data', async (req, res) => {
 });
 
 // 🔄 Manually refresh from GitHub Pages
-router.post('/dashboard/refresh', async (req, res) => {
+router.post('/refresh', async (req, res) => {
   try {
     console.log('🔁 Manual refresh requested...');
 
