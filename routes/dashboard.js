@@ -6,8 +6,6 @@ const User = require('../models/User');
 
 const GITHUB_API_URL = 'https://iivashch.github.io/daily-json-api/data.json';
 
-User.findById(req.user._id).select('username isAdmin');
-
 // Helper to check if snapshot is older than 24 hours
 const isStale = (date) => {
   if (!date) return true;
@@ -43,6 +41,23 @@ router.get('/dashboard/data', async (req, res) => {
   } catch (err) {
     console.error('❌ Error fetching dashboard data:', err.message);
     res.status(500).json({ error: 'Dashboard data fetch error' });
+  }
+});
+
+// 🔄 Manually refresh from GitHub Pages
+router.post('/dashboard/refresh', async (req, res) => {
+  try {
+    console.log('🔁 Manual refresh requested...');
+
+    const response = await axios.get(GITHUB_API_URL);
+    const freshData = response.data;
+
+    await DashboardSnapshot.findOneAndUpdate({}, freshData, { upsert: true, new: true });
+
+    res.json({ success: true, updated_at: freshData.updated_at });
+  } catch (err) {
+    console.error('❌ Refresh error:', err.message);
+    res.status(500).json({ error: 'Manual refresh failed', details: err.message });
   }
 });
 

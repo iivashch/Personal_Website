@@ -2,73 +2,76 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+
+// 🗂️ Routes
+const filesRoute = require('./routes/files');
+
+
 const app = express();
 
-const User = require('./models/User');
 
 
-// Dashboard models
-const dashboardRoutes = require('./routes/dashboard');
-// Dashboard routes
-app.use('/', dashboardRoutes);
-
-// Game models
-const snakeRoute = require('./routes/snake');
-const guessRoutes = require('./routes/guess');
-
-// Load environment variables
+// 🌱 Load environment variables
 dotenv.config();
-const SECRET_KEY = process.env.SECRET_KEY;
 
-// Connect to MongoDB
+// 🔗 Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI);
 
+// 🧩 Models
+const User = require('./models/User');
 
-
-
-mongoose.connection.once('open', async () => {
-  const adminExists = await User.findOne({ username: process.env.ADMIN_USERNAME });
-  if (!adminExists) {
-    const admin = new User({
-      username: process.env.ADMIN_USERNAME,
-      password: process.env.ADMIN_PASSWORD,
-      isAdmin: true,
-      isApproved: true
-    });
-    await admin.save();
-    console.log('✔ Admin user created');
-  } else {
-    console.log('✔ Admin user already exists');
-  }
-});
-
-
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.use(methodOverride('_method'));
-app.use(cookieParser());
+// 🔧 View engine
 app.set('view engine', 'ejs');
 
-// Authentication middleware
+// 📂 Serve static assets from public folder
+app.use(express.static('public'));
+
+// 🧼 Core middleware
+app.use(methodOverride('_method'));
+app.use(cookieParser());
+
+// 🔐 Auth middleware
 const { authenticateUser } = require('./middleware/authenticate');
 app.use(authenticateUser);
 
 
-// Routes
+
+// 📦 Body parsers (AFTER upload routes!)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 🌍 Core application routes
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/posts', require('./routes/posts'));
 app.use('/admin', require('./routes/admin'));
+app.use('/', require('./routes/dashboard'));
+app.use('/files', requere(filesRoute));
 
-// Game routes
-app.use('/snake', snakeRoute);
-app.use('/guess', guessRoutes);
-app.use(express.json()); // <--- REQUIRED to parse JSON POST bodies
-app.use(express.urlencoded({ extended: true }));
+// 🎮 Mini-apps and games
+app.use('/snake', require('./routes/snake'));
+app.use('/guess', require('./routes/guess'));
 
-
+// 👑 Create admin if missing
+mongoose.connection.once('open', async () => {
+  try {
+    const adminExists = await User.findOne({ username: process.env.ADMIN_USERNAME });
+    if (!adminExists) {
+      const admin = new User({
+        username: process.env.ADMIN_USERNAME,
+        password: process.env.ADMIN_PASSWORD,
+        isAdmin: true,
+        isApproved: true
+      });
+      await admin.save();
+      console.log('✔ Admin user created');
+    } else {
+      console.log('✔ Admin user already exists');
+    }
+  } catch (err) {
+    console.error('❌ Error checking/creating admin user:', err);
+  }
+});
 
 module.exports = app;

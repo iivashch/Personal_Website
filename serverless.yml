@@ -3,11 +3,18 @@ service: express-blog-app
 frameworkVersion: '4.10.1'
 
 provider:
-  stage: dev #change this to prod for production
   name: aws
   runtime: nodejs18.x
+  stage: dev
   region: us-east-1
   timeout: 29
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'                    # enable binary (image, pdf, etc.)
+      - 'multipart/form-data'   # form uploads
+      - 'image/jpeg'
+      - 'image/png'
+      - 'application/octet-stream'
   environment:
     MONGO_URI: ${env:MONGO_URI}
     SECRET_KEY: ${env:SECRET_KEY}
@@ -39,6 +46,13 @@ functions:
       ADMIN_PASSWORD: ${env:ADMIN_PASSWORD}
       FRED_API: ${env:FRED_API}
 
+  serveImage:
+    handler: binaryServe.handler   # ✅ make sure this points to binaryImage.js
+    events:
+      - http:
+          path: files/{proxy+}
+          method: get
+
 plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
@@ -55,8 +69,9 @@ custom:
   pythonRequirements:
     pythonBin: python3
 
-
 package:
+  include:
+    - 'public/data/**'
   patterns:
     - '!node_modules/**'
     - 'node_modules/express/**'
@@ -67,7 +82,7 @@ package:
     - 'models/**'
     - 'middleware/**'
     - 'views/**'
-    - 'public/**'
+    - 'binaryImage.js'       # ✅ include your image lambda
   exclude:
     - .git/**
     - .gitignore

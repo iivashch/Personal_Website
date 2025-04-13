@@ -1,11 +1,17 @@
-// lambda.js
 const awsServerlessExpress = require('aws-serverless-express');
-const app = require('./app'); // your Express app instance
+const app = require('./app');
 
-// Create the server instance
-const server = awsServerlessExpress.createServer(app);
+const binaryMimeTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'application/octet-stream',
+  'multipart/form-data',
+];
 
-// Export the Lambda-compatible handler
+const server = awsServerlessExpress.createServer(app, null, binaryMimeTypes);
+
 exports.handler = (event, context) => {
+  // Proxy MUST include base64 encoding handling
   return awsServerlessExpress.proxy(server, event, context);
 };

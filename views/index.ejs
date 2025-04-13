@@ -1,25 +1,86 @@
 <%- include('partials/header', { title: 'Home' }) %>
-<div class="container mt-5">
-  <h1>Welcome to Express Blog</h1>
-  <% if (posts && posts.length > 0) { %>
-    <div class="list-group">
-      <% posts.forEach(post => { %>
-        <a href="/posts/<%= post._id %>" class="list-group-item list-group-item-action">
-          <h5><%= post.title %></h5>
-          <small>By <%= post.author.username %> on <%= post.createdAt.toDateString() %></small>
-        </a>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <p>No posts found.</p>
-  <% } %>
-</div>
+
+<style>
+  .about-hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-bottom: 1px solid #ccc;
+  }
+  .about-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+  .about-hero img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .story {
+    padding: 3rem 1rem;
+    background-color: #ffffff;
+  }
+
+  .skills {
+    padding: 3rem 1rem;
+    background-color: #f1f3f5;
+  }
+
+  .skill-item {
+    display: inline-block;
+    background-color: #0d6efd;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin: 0.3rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .modal-content {
+    border-radius: 0.75rem;
+  }
+</style>
+
+<section class="about-hero">
+  <div class="container">
+    <h1>Hi, I'm Illia an aspiring polymath.</h1>
+    <img src="/files/view/landingImage" style="max-width: 100%;" />
+
+    <p class="lead mt-3">
+      I approach questions with a problem-solving mindset.
+    </p>
+  </div>
+</section>
+
+<section class="story">
+  <div class="container">
+    <h2>My Journey</h2>
+    <p>
+      Born and raised in Kyiv, Ukraine. As long as I can remember, I've always been curious about how things work — and more importantly, how they can be improved. My passion lies in optimization, automation, and risk analysis.
+      Follow my thoughts and discoveries through the blog posts on this site.
+    </p>
+  </div>
+</section>
+
+<section class="skills">
+  <div class="container">
+    <h2>Skills</h2>
+    <div class="skill-item">Python / C++</div>
+    <div class="skill-item">Bash</div>
+    <div class="skill-item">LaTeX</div>
+    <div class="skill-item">SQL</div>
+  </div>
+</section>
 
 <% if (query && query.registered === 'pending') { %>
   <div class="modal fade show" id="pendingModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-warning">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-warning text-dark">
           <h5 class="modal-title">Account Created</h5>
           <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
         </div>
@@ -39,11 +100,9 @@
     function closeModal() {
       document.getElementById('pendingModal').style.display = 'none';
       document.querySelector('.modal-backdrop').remove();
-      window.history.replaceState(null, null, window.location.pathname); // remove ?registered param
+      window.history.replaceState(null, null, window.location.pathname);
     }
   </script>
 <% } %>
-
-
 
 <%- include('partials/footer') %>

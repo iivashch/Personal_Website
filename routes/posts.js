@@ -21,8 +21,18 @@ router.post('/', async (req, res) => {
   const { title, content } = req.body;
   const post = new Post({ title, content, author: req.user._id });
   await post.save();
-  res.redirect('/');
+  res.redirect('/posts/view-posts');
 });
+
+router.get('/view-posts', async (req, res) => {
+  const posts = await Post.find().populate('author').sort({ createdAt: -1 });
+  res.render('view-posts', { posts, user: req.user });
+});
+
+router.get('/', (req, res) => {
+  res.redirect('/posts/view-posts');
+});
+
 
 router.get('/:id', validateObjectId, async (req, res) => {
   const post = await Post.findById(req.params.id).populate('author');
@@ -47,7 +57,7 @@ router.put('/:id', validateObjectId, async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   await Post.findOneAndDelete({ _id: req.params.id, author: req.user });
-  res.redirect('/');
+  res.redirect('/posts/view-posts');
 });
 
 module.exports = router;
