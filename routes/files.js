@@ -35,8 +35,12 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     }
 
     const readableStream = Readable.from(buffer);
+
+    const isFeatured = req.body.featured === 'on';
+
     const uploadStream = getBucket().openUploadStream(saveAs, {
       contentType: mimetype,
+      metadata: { isFeatured }
     });
 
     readableStream.pipe(uploadStream);
@@ -113,5 +117,22 @@ router.post('/delete/:id', async (req, res) => {
     res.status(500).send('Failed to delete file');
   }
 });
+
+// isFeatured toggle
+router.post('/feature/:id', async (req, res) => {
+    const fileId = new mongoose.Types.ObjectId(req.params.id);
+    const db = mongoose.connection.db;
+    const file = await db.collection('uploads.files').findOne({ _id: fileId });
+  
+    const isFeatured = file?.metadata?.featured === true;
+  
+    await db.collection('uploads.files').updateOne(
+      { _id: fileId },
+      { $set: { 'metadata.featured': !isFeatured } }
+    );
+  
+    console.log(`🔁 Updated featured flag for ${file.filename} to ${!isFeatured}`);
+    res.redirect('/files');
+  });
 
 module.exports = router;

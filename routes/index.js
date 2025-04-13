@@ -1,14 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
+const mongoose = require('mongoose');
+
+
 
 router.get('/', async (req, res) => {
-  const posts = await Post.find().populate('author');
-  res.render('index', { 
-    posts,
-    user: req.user,
-    query: req.query
-  });
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('⚠️ MongoDB not connected, skipping image fetch');
+      return res.render('index', {
+        featuredImages: [],
+        user: req.user,
+        query: req.query,
+      });
+    }
+
+    const db = mongoose.connection.db;
+    const featuredImages = await db
+      .collection('uploads.files')
+      .find({ 'metadata.featured': true })
+      .toArray();
+
+    res.render('index', {
+      featuredImages,
+      user: req.user,
+      query: req.query,
+    });
+  } catch (err) {
+    console.error('❌ Error fetching featured images:', err);
+    res.render('index', {
+      featuredImages: [],
+      user: req.user,
+      query: req.query,
+    });
+  }
 });
+
 
 module.exports = router;

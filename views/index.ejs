@@ -43,13 +43,56 @@
   .modal-content {
     border-radius: 0.75rem;
   }
+
+  .tripic-frame {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tripic-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+    object-position: center center;
+    background-color: #000; /* fallback behind transparent PNGs */
+    display: block;
+  }
+
+  .tripic-img:hover {
+    transform: scale(1.03);
+  }
+
+  @media (max-width: 768px) {
+    .tripic-frame {
+      aspect-ratio: 16 / 10;
+    }
+  }
 </style>
+
 
 <section class="about-hero">
   <div class="container">
-    <h1>Hi, I'm Illia an aspiring polymath.</h1>
-    <img src="/files/view/landingImage" style="max-width: 100%;" />
-
+    <h1>Hi, I'm Illia - an aspiring polymath.</h1>
+    <section class="landing-gallery py-5">
+        <div class="row g-3">
+          <% featuredImages.forEach(image => { %>
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="tripic-frame">
+                <img src="/files/preview/<%= image._id %>" alt="" class="tripic-img" />
+              </div>
+            </div>
+          <% }) %>
+        </div>
+    </section>
+    
     <p class="lead mt-3">
       I approach questions with a problem-solving mindset.
     </p>
