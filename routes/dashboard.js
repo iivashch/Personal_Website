@@ -6,7 +6,6 @@ const User = require('../models/User');
 
 const GITHUB_API_URL = 'https://iivashch.github.io/daily-json-api/data.json';
 
-User.findById(req.user._id).select('username isAdmin');
 
 // Helper to check if snapshot is older than 24 hours
 const isStale = (date) => {
