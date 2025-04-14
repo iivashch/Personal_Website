@@ -1,23 +1,45 @@
 <%- include('partials/header', { title: 'Snake Game'}) %>
+
 <style>
-  html, body { height: 100%; margin: 0; }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
   canvas {
     background-color: #222;
     display: block;
     margin: 0 auto;
     border-radius: 8px;
-    width: 100%; max-width: 400px; height: auto;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
     aspect-ratio: 1 / 1;
   }
+
   .game-wrapper {
     min-height: 90vh;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 0 1rem;
+  }
+
+  #mobileWarning {
+    display: none;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  #mobileWarning h2 {
+    font-size: 1.5rem;
+    color: #333;
   }
 </style>
 
-<div class="container-fluid text-center game-wrapper">
+<!-- Game Container -->
+<div id="gameContainer" class="container-fluid text-center game-wrapper">
   <h1 class="mb-4">🐍 Classic Snake Game</h1>
 
   <canvas id="gameCanvas" width="400" height="400"></canvas>
@@ -34,30 +56,24 @@
     <p><em>Log in to track your score!</em></p>
     <div id="isLoggedIn" data-loggedin="false"></div>
   <% } %>
-<!--- Uncomment this section if you want to display the leaderboard
-  <% if (leaderboard && leaderboard.length) { %>
-    <div class="mt-5 w-100" style="max-width: 400px;">
-      <h4>🏆 Leaderboard</h4>
-      <table class="table table-sm table-bordered">
-        <thead>
-          <tr><th>Rank</th><th>User</th><th>Score</th></tr>
-        </thead>
-        <tbody>
-          <% leaderboard.forEach((u, i) => { %>
-            <tr>
-              <td><%= i + 1 %></td>
-              <td><%= u.username %></td>
-              <td><%= u.snakeScore %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-  <% } %>
---->
+</div>
+
+<!-- Mobile Warning Message -->
+<div id="mobileWarning">
+  <h2>⚠️ Please open this page on a computer to play.</h2>
 </div>
 
 <script>
+  // Mobile device detection
+  function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  if (isMobileDevice()) {
+    document.getElementById('gameContainer').style.display = 'none';
+    document.getElementById('mobileWarning').style.display = 'block';
+  }
+
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
   const box = 20;
@@ -156,4 +172,5 @@
 
   initGame();
 </script>
+
 <%- include('partials/footer') %>
