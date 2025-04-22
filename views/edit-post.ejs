@@ -1,27 +1,60 @@
 <%- include('partials/header', { title: 'Edit Post' }) %>
+
+<!-- SimpleMDE CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde/dist/simplemde.min.css">
+<!-- KaTeX CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+
 <div class="container mt-5">
   <h1>Edit Post</h1>
   <form action="/posts/<%= post._id %>?_method=PUT" method="POST">
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" class="form-control" id="title" name="title" value="<%= post.title %>" required>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        value="<%= post.title %>"
+        required
+      >
     </div>
     <div class="mb-3">
       <label for="content" class="form-label">Content</label>
-      <textarea id="content" name="content"><%= post.content %></textarea>
+      <textarea id="content" name="content"></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Update Post</button>
   </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-
+<!-- KaTeX JS + auto-render -->
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
+<!-- SimpleMDE JS -->
+<script src="https://cdn.jsdelivr.net/npm/simplemde/dist/simplemde.min.js"></script>
 
 <script>
-  const simplemde = new SimpleMDE({ element: document.getElementById('content'),
-  previewRender: function(plainText) {
-    return marked(plainText);
-  }
-   });
+  document.addEventListener('DOMContentLoaded', function() {
+    var simplemde = new SimpleMDE({
+      element: document.getElementById('content'),
+      previewRender: function(plainText, preview) {
+        // Convert Markdown to HTML
+        var html = this.parent.markdown(plainText);
+        preview.innerHTML = html;
+        // Render LaTeX in preview
+        renderMathInElement(preview, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '\\[', right: '\\]', display: true },
+            { left: '$',  right: '$',  display: false },
+            { left: '\\(', right: '\\)', display: false }
+          ],
+          throwOnError: false
+        });
+        return preview.innerHTML;
+      }
+    });
+  });
 </script>
+
 <%- include('partials/footer') %>

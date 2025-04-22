@@ -8,6 +8,7 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  background-color: #E6E6E6;
 }
 
 main {
@@ -22,7 +23,33 @@ main {
   max-width: 100%;
 }
 
-.container {
-  margin-top: 10vh;   /* adds space so popup fits above */
+
+.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
 }
+
+.header-container {
+  background-color: #44576D;
+  padding: 10px;
+}
+
+.navbar-brand{
+  padding-left: 10px;
+  padding-bottom: 0;
+}
+
+.nav-link{
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 8px;
+  padding-bottom: 0;
+  border-bottom: 1px solid transparent; /* Add a transparent border for spacing */
+}
+
+.nav-item .nav-link:hover {
+  color: black;    
+  border-bottom: 1px solid black; /* Add underline on hover */
+}
+
 

@@ -1,4 +1,5 @@
-# Personal Blog Website
+# Personal Website
+
 
 Written with Express, EJS, Javascript, Docker, and deployed using AWS.
 

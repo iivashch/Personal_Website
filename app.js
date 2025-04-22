@@ -43,7 +43,8 @@ app.use('/files', require('./routes/files')); // includes upload/download/previe
 app.use('/snake', require('./routes/snake'));
 app.use('/guess', require('./routes/guess'));
 app.use('/', require('./routes/health'));
-
+app.use('/landing', require('./routes/landing'));
+app.use('/picture-gallery', require('./routes/picture-gallery'));
 
 // 👑 Admin bootstrap
 const User = require('./models/User');

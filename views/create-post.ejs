@@ -13,13 +13,44 @@
     <button type="submit" class="btn btn-primary">Create Post</button>
   </form>
 </div>
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+<!-- SimpleMDE CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde/dist/simplemde.min.css">
+<!-- KaTeX CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+
+<!-- KaTeX + auto-render -->
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
+<!-- SimpleMDE JS -->
+<script src="https://cdn.jsdelivr.net/npm/simplemde/dist/simplemde.min.js"></script>
 
 <script>
-  const simplemde = new SimpleMDE({ element: document.getElementById('content'),
-    previewRender: function(plainText) {
-      return marked(plainText);
-    }
-   });
+  document.addEventListener("DOMContentLoaded", function() {
+    var simplemde = new SimpleMDE({
+      element: document.getElementById("content"),
+      previewRender: function(plainText) {
+        // 1) Markdown → HTML
+        var html = this.parent.markdown(plainText);
+
+        // 2) Render math in a temporary container
+        var container = document.createElement("div");
+        container.innerHTML = html;
+        renderMathInElement(container, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "$",  right: "$",  display: false },
+            { left: "\\(", right: "\\)", display: false }
+          ],
+          throwOnError: false
+        });
+
+        // 3) Return rendered HTML
+        return container.innerHTML;
+      }
+    });
+  });
 </script>
+
 <%- include('partials/footer') %>

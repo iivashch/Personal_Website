@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Illia — Economist | Data Strategist | Classical Art Enthusiast</title>
+  <!-- Google Fonts: Headers (Playfair Display) & Body (Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      background: #f8fae5; /* Cream background */
+      color: #0F172A; /* Navy text */
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    /* NAVIGATION */
+    nav {
+      position: fixed;
+      top: 20px;
+      right: 40px;
+      z-index: 100;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #EAB308;  /* Gold Accent */
+    }
+    /* HERO SECTION */
+    header {
+      position: relative;
+      min-height: 100vh;
+      background: url('/data/parchment-bg.jpg') no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #0F172A;
+      padding: 0 1rem;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6); /* Semi-transparent navy overlay for legibility */
+      z-index: 0;
+    }
+    header .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      color: #fff;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    header p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-buttons a {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      border-radius: 30px;
+      font-size: 1.125rem;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    .cta-primary {
+      background: #EAB308; /* Gold */
+      color: #0F172A;
+    }
+    .cta-primary:hover {
+      background: #d09a05;
+    }
+    .cta-secondary {
+      background: #B45309; /* Terracotta */
+      color: #fff;
+    }
+    .cta-secondary:hover {
+      background: #9a3e07;
+    }
+    /* SECTION CONTAINERS */
+    section {
+      padding: 4rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #0F172A;
+    }
+    /* ABOUT SECTION */
+    .about {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+    }
+    .about-text, .about-image {
+      flex: 1 1 400px;
+    }
+    .about-text p {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+    .about-image img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    /* PORTFOLIO / PROJECTS */
+    .portfolio {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .portfolio-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+      background: #fff;
+    }
+    .portfolio-item:hover {
+      transform: translateY(-5px);
+    }
+    .portfolio-item img {
+      width: 100%;
+      display: block;
+    }
+    .portfolio-item .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+    }
+    .portfolio-item:hover .overlay {
+      opacity: 1;
+    }
+    /* SKILLS SECTION */
+    .skills {
+      text-align: center;
+    }
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .skill-item {
+      padding: 0.75rem 1.5rem;
+      background: #0D6EFD;
+      color: #fff;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    /* BLOG SECTION */
+    .blog {
+      background: #f1f3f5;
+      padding: 3rem 1rem;
+    }
+    .blog-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .blog-item {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .blog-item:hover {
+      transform: translateY(-3px);
+    }
+    .blog-item h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 0.75rem;
+    }
+    .blog-item p {
+      font-size: 1rem;
+    }
+    /* CONTACT SECTION */
+    .contact {
+      background: #0F172A;
+      color: #fff;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .contact a {
+      color: #EAB308;
+      font-weight: 600;
+    }
+    /* FOOTER */
+    footer {
+      padding: 2rem 1rem;
+      text-align: center;
+      background: #0F172A;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    footer p:last-child {
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+    /* RESPONSIVE ADJUSTMENTS */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.5rem;
+      }
+      header p {
+        font-size: 1.25rem;
+      }
+      .about {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav {
+        right: 20px;
+        top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#portfolio">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header>
+    <div class="hero-content">
+      <h1>Decoding Patterns in Markets, Data, & Art History</h1>
+      <p>Recent Economics graduate merging analytical rigor with art historical insights.</p>
+      <div class="hero-buttons">
+        <a href="#portfolio" class="cta-primary">View Projects</a>
+        <a href="/resume.pdf" class="cta-secondary" target="_blank">Download Resume</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <h2 class="section-title">About Me</h2>
+    <div class="about">
+      <div class="about-text">
+        <p>
+          Opportunity springs from complexity: a hare confined to the same quadrant will inevitably fall into the same trap. True progress demands boldness and a spirit of experimentation.
+        </p>
+        <p>
+          
+          I combine my economics training with a deep appreciation for classical art to foster systems thinking and innovative data storytelling. My journey—from analyzing financial markets to deciphering historical patronage networks—has shaped my unique perspective.
+        </p>
+        <p>
+          Coding, data analysis, and a passion for art history converge in my work, bridging the gap between theory and implementation.
+        </p>
+      </div>
+      <div class="about-image">
+        <img src="/data/ILLIA_PROFILE.jpg" alt="Portrait of Illia" />
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO / PROJECTS SECTION -->
+  <section id="portfolio">
+    <h2 class="section-title">Projects</h2>
+    <div class="portfolio">
+      <!-- Technical Projects -->
+      <div class="portfolio-item">
+        <img src="/data/project-financial.jpg" alt="Financial Data Pipeline" />
+        <div class="overlay">Financial Data Pipeline<br /><small>Python ETL &amp; backtesting</small></div>
+      </div>
+      <div class="portfolio-item">
+        <img src="/data/project-consulting.jpg" alt="Consulting Case Simulator" />
+        <div class="overlay">Consulting Case Simulator<br /><small>Interactive strategy tool</small></div>
+      </div>
+      <div class="portfolio-item">
+        <img src="/data/project-speech.jpg" alt="Central Bank Speech Analysis" />
+        <div class="overlay">Central Bank Speech Analysis<br /><small>NLP sentiment tracking</small></div>
+      </div>
+      <!-- Art-Inspired Analysis -->
+      <div class="portfolio-item">
+        <img src="/data/project-dutch.jpg" alt="Dutch Golden Age Case Study" />
+        <div class="overlay">Dutch Golden Age Study<br /><small>Tulip mania &amp; Rembrandt</small></div>
+      </div>
+      <div class="portfolio-item">
+        <img src="/data/project-artmarket.jpg" alt="Art Market Dashboard" />
+        <div class="overlay">Art Market Dashboard<br /><small>Auction trends analysis</small></div>
+      </div>
+      <div class="portfolio-item">
+        <img src="/data/project-renaissance.jpg" alt="Renaissance vs. Financial Models" />
+        <div class="overlay">Renaissance &amp; Financial Models<br /><small>Comparative essay &amp; diagrams</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION -->
+  <section id="skills">
+    <h2 class="section-title">Core Skills</h2>
+    <div class="skill-list">
+      <div class="skill-item">Financial Modeling ▰▰▰▰▰</div>
+      <div class="skill-item">Statistical Arbitrage ▰▰▰▰▰</div>
+      <div class="skill-item">Data Storytelling ▰▰▰▰▰</div>
+      <div class="skill-item">Python (Pandas/NumPy)</div>
+      <div class="skill-item">SQL, Excel, VBA</div>
+      <div class="skill-item">Tableau &amp; R</div>
+      <div class="skill-item">LaTeX Documentation</div>
+      <div class="skill-item">Art Market Analysis</div>
+      <div class="skill-item">Historical Contextualization</div>
+      <div class="skill-item">Visual Communication</div>
+    </div>
+  </section>
+
+  <!-- BLOG SECTION -->
+  <section id="blog" class="blog">
+    <h2 class="section-title">Insights &amp; Essays</h2>
+    <div class="blog-items">
+      <div class="blog-item">
+        <h3>Monet’s Series Paintings as Time-Series Data</h3>
+        <p>Exploring the parallels between impressionist techniques and market trend analysis.</p>
+      </div>
+      <div class="blog-item">
+        <h3>The Medici Bank Playbook for Modern PE</h3>
+        <p>A deep dive into financial strategies through the lens of Renaissance commerce.</p>
+      </div>
+      <div class="blog-item">
+        <h3>Chiaroscuro Principles for Data Visualization</h3>
+        <p>How the interplay of light and shadow can transform your analytical insights.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="contact">
+    <h2 class="section-title">Get in Touch</h2>
+    <p>
+      I'm actively seeking opportunities in investment banking, consulting, or data analytics—where my blend of economic rigor, technical prowess, and art-historical insight can drive innovative strategies.
+    </p>
+    <p>
+      Reach out at <a href="mailto:illia@example.com">illia@example.com</a> or connect via LinkedIn.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 Illia. All Rights Reserved.</p>
+    <p>Inspired by the past • Analyzing the present • Building the future</p>
+  </footer>
+</body>
+</html>
