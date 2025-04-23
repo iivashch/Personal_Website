@@ -10,11 +10,16 @@ provider:
   timeout: 29
   apiGateway:
     binaryMediaTypes:
-      - '*/*'                    # enable binary (image, pdf, etc.)
-      - 'multipart/form-data'   # form uploads
+      - '*/*'
+      - 'multipart/form-data'
       - 'image/jpeg'
       - 'image/png'
-      - 'application/octet-stream'
+      - 'image/webp'
+      - 'image/gif'
+      - 'application/pdf'
+      - 'video/quicktime'
+      - 'video/mp4'
+      - 'video/webm'
   environment:
     MONGO_URI: ${env:MONGO_URI}
     SECRET_KEY: ${env:SECRET_KEY}
@@ -23,6 +28,16 @@ provider:
     FRED_API: ${env:FRED_API}
 
 functions:
+  serveImage:
+    handler: binaryImage.handler
+    events:
+      - http:
+          path: static/{proxy+}
+          method: get
+      - http:
+          path: data/{proxy+}
+          method: get
+
   app:
     handler: lambda.handler
     events:
@@ -32,6 +47,12 @@ functions:
       - http:
           path: /{proxy+}
           method: any
+          request:
+            parameters:
+              paths:
+                proxy:
+                  # only match if proxy does NOT start with "static/" or "data/"
+                  pattern: '^(?!static/|data/).+$'
 
   fetchDashboard:
     name: express-blog-app-dev-fetchDashboard
@@ -45,13 +66,6 @@ functions:
       ADMIN_USERNAME: ${env:ADMIN_USERNAME}
       ADMIN_PASSWORD: ${env:ADMIN_PASSWORD}
       FRED_API: ${env:FRED_API}
-
-  serveImage:
-    handler: binaryServe.handler   # ✅ make sure this points to binaryImage.js
-    events:
-      - http:
-          path: static/{proxy+}
-          method: get
 
 plugins:
   - serverless-dotenv-plugin
@@ -72,6 +86,7 @@ custom:
 package:
   include:
     - 'public/data/**'
+    - 'binaryImage.js'
   patterns:
     - '!node_modules/**'
     - 'node_modules/express/**'
@@ -82,7 +97,6 @@ package:
     - 'models/**'
     - 'middleware/**'
     - 'views/**'
-    - 'binaryImage.js'       # ✅ include your image lambda
   exclude:
     - .git/**
     - .gitignore

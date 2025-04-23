@@ -43,5 +43,8 @@
   "bugs": {
     "url": "https://github.com/iivashch/Personal_Website/issues"
   },
-  "homepage": "https://github.com/iivashch/Personal_Website#readme"
+  "homepage": "https://github.com/iivashch/Personal_Website#readme",
+  "devDependencies": {
+    "serverless-apigw-binary": "^0.4.4"
+  }
 }
