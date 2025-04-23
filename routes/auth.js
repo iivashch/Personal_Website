@@ -41,13 +41,13 @@ router.post('/login', async (req, res) => {
   }
 
   // ✅ Regular user goes to homepage
-  res.redirect('/');
+  res.redirect('/index');
 });
 
 
 router.get('/logout', (req, res) => {
   res.clearCookie('token');
-  res.redirect('/');
+  res.redirect('/index');
 });
 
 module.exports = router;

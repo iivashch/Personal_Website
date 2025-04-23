@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 🌍 Route handlers
-app.use('/', require('./routes/index'));
+app.use('/index', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/posts', require('./routes/posts'));
 app.use('/admin', require('./routes/admin'));
@@ -42,8 +42,7 @@ app.use('/dashboard', require('./routes/dashboard'));
 app.use('/files', require('./routes/files')); // includes upload/download/preview/delete
 app.use('/snake', require('./routes/snake'));
 app.use('/guess', require('./routes/guess'));
-app.use('/', require('./routes/health'));
-app.use('/landing', require('./routes/landing'));
+app.use('/', require('./routes/landing'));
 app.use('/picture-gallery', require('./routes/picture-gallery'));
 
 // 👑 Admin bootstrap

@@ -1,10 +1,15 @@
 <%- include('partials/header', { title: 'Home' }) %>
 
 <style>
+  #aboout-hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px;
+  }
   .about-hero {
     text-align: center;
-    padding: 3rem 1rem;
     border-bottom: 5px solid white;
+    color: black;
   }
   .about-hero h1 {
     font-size: 2.5rem;
@@ -18,55 +23,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
 
-  .story {
-    padding: 3rem 1rem;
-    background-color: #E6E6E6;
-    border-bottom: 5px solid white;
-  }
-
-  .skills {
-    padding: 3rem 1rem;
-    background-color: #E6E6E6;
-  }
-
-  .skill-item {
-    display: inline-block;
-    background-color: gray;
-    color: white;
-    padding: 0.5rem 1rem;
-    margin: 0.3rem;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: 500;
-  }
-
-  .modal-content {
-    border-radius: 0.75rem;
-  }
-
-  .tripic-frame {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    background-color: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tripic-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.2s ease;
-  }
-
-  .tripic-img:hover {
-    transform: scale(1.03);
-  }
-
   @media (max-width: 768px) {
     .tripic-frame {
       aspect-ratio: 16 / 10;
@@ -76,79 +32,15 @@
 
 
 <section class="about-hero">
-  <div class="container">
-    <h1>Hi, I'm Illia - an aspiring polymath.</h1>
-    <section class="landing-gallery py-5">
-        <div class="row g-3">
-            <div class="col-12 col-sm-6 col-md-4">
-              <div class="tripic-frame">
-                <img src="/data/IMG_0188.jpg" alt="" class="tripic-img" />
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4">
-              <div class="tripic-frame">
-                <img src="/data/IMG_5041.jpg" alt="" class="tripic-img" />
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4">
-              <div class="tripic-frame">
-                <img src="/data/IMG_0311.JPG" alt="" class="tripic-img" />
-              </div>
-            </div>
-        </div>
-    </section>
-    
+  <div class="container" id="about-hero-container">
+    <h1>Hi, welcome to the basement.</h1>
     <p class="lead mt-3">
-      I approach questions with a problem-solving mindset.
+        Here is where all the backend tools live. <br/> If you're looking for the landing page, <a href="/">click here</a>. If you want to create an account, <a href="auth/register">click here</a>.
     </p>
   </div>
 </section>
 
-<!--
 
-Dynamically load images from the database,
-slower method, but keep in mind for other implementations
-
-<section class="about-hero">
-  <div class="container">
-    <h1>Hi, I'm Illia - an aspiring polymath.</h1>
-    <section class="landing-gallery py-5">
-        <div class="row g-3">
-          <% featuredImages.forEach(image => { %>
-            <div class="col-12 col-sm-6 col-md-4">
-              <div class="tripic-frame">
-                <img src="/files/preview/<%= image._id %>" alt="" class="tripic-img" />
-              </div>
-            </div>
-          <% }) %>
-        </div>
-    </section>
-    
-    <p class="lead mt-3">
-      I approach questions with a problem-solving mindset.
-    </p>
-  </div>
-</section>
--->
-<section class="story">
-  <div class="container">
-    <h2>My Journey</h2>
-    <p>
-      Born and raised in Kyiv, Ukraine. As long as I can remember, I've always been curious about how things work — and more importantly, how they can be improved. My passion lies in optimization, automation, and risk analysis.
-      Follow my thoughts and discoveries through the blog posts on this site.
-    </p>
-  </div>
-</section>
-
-<section class="skills">
-  <div class="container">
-    <h2>Skills</h2>
-    <div class="skill-item">Python / C++</div>
-    <div class="skill-item">Bash</div>
-    <div class="skill-item">LaTeX</div>
-    <div class="skill-item">SQL</div>
-  </div>
-</section>
 
 <% if (query && query.registered === 'pending') { %>
   <div class="modal fade show" id="pendingModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">

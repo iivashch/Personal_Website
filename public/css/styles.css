@@ -1,14 +1,16 @@
 
   /* Sticky footer layout */
-html, body {
+  
+  
+  footer {
   height: 100%;
   width: 100%;
-}
+  }
 
 body {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #E6E6E6;
 }
 
 main {
@@ -24,13 +26,8 @@ main {
 }
 
 
-.container-fluid {
-  padding-left: 0;
-  padding-right: 0;
-}
 
 .header-container {
-  background-color: #44576D;
   padding: 10px;
 }
 
